@@ -1,22 +1,46 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Trainer from './components/trainer/trainer';
 import './App.css';
 import Success from './components/success/success';
+import NewTrainer from './components/newTrainer/newTrainer';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 
 function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <Switch>
-        <Route exact path="/" component={Trainer}>
+        <Route exact path="/">
+          <Trainer/>
         </Route>
         <Route path="/trainer" component={Trainer}>
         </Route>
         <Route path="/success" component={Success}>
         </Route>
+        <Route path="/new">
+          <NewTrainer />
+        </Route>
+        <PrivateRoute path="/success">
+          <Success />
+        </PrivateRoute>
       </Switch>
-  </BrowserRouter>
+  </Router>
   );
+
+  function PrivateRoute({ children, ...rest }) {    
+    return (
+            <Redirect
+              to={{
+                pathname: "/new",
+                state: { from: '/success' }
+              }}
+            />
+    );
+  }
 }
 
 export default App;

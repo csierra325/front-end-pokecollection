@@ -1,0 +1,10 @@
+.trainer-group{
+    z-index: 1;
+}
+
+.trainer-button{
+    padding: 0px;
+    color: black;
+    text-align: center;
+    border: 4px black solid;
+}
