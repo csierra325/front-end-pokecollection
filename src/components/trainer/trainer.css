@@ -1,4 +1,4 @@
-.trainer-container{
+.trainer-container {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -6,11 +6,11 @@
     justify-content: center;
 }
 
-.trainer-group{
+.trainer-group {
     z-index: 1;
 }
 
-.trainer-header{
+.trainer-header {
     font-weight: bold;
     font-size: 4rem;
     align-self: center;
@@ -18,7 +18,7 @@
     margin: auto;
 }
 
-.trainer-subheader{
+.trainer-subheader {
     font-size: 2rem;
     font-weight: 600;
     align-self: center;
@@ -31,47 +31,52 @@
     color: white;
     font-weight: bold;
     align-items: center;
-    width: 400px;
+    width: 900px;
     margin: auto;
     margin-top: 3rem;
     text-align: center;
-    padding: 5rem;
+    padding: 1rem;
     border: 3px solid white;
 }
 
-.trainer-input{
+.trainer-input {
     align-self: center;
     width: fit-content;
     padding: 11px 40px;
     margin: 7px;
 }
 
-.trainer-button{
+.trainer-button {
     padding: 0px;
     color: black;
     text-align: center;
     border: 4px black solid;
 }
 
-.pokemon-name{
+.pokemon-name {
     display: inline;
     margin: 15px;
 }
-.pokemon-id{
+
+.pokemon-id {
     display: inline;
-    margin: 34px;  
+    margin: 34px;
 }
-.pokemon-rarity{
+
+.pokemon-rarity {
     display: inline;
-    margin: 23px;; 
+    margin: 23px;
+    ;
 }
-.error{
+
+.error {
     color: red;
     font-weight: bold;
     font-size: 2em;
     margin: 6px;
 }
-.bg{
+
+.bg {
     position: absolute;
     height: 100vh;
     background-repeat: no-repeat;
@@ -79,4 +84,41 @@
     opacity: 0.45;
     top: 0;
     width: 100%;
+}
+
+.welcome {
+    font-weight: bold;
+    font-size: 34px;
+}
+
+.basic-button {
+    padding: .3rem;
+    color: black;
+    text-align: center;
+    border: 4px black solid;
+    margin: .5rem 2rem 0 2rem;
+    background: green;
+    cursor: pointer;
+}
+
+.premium-button {
+    padding: .3rem;
+    color: black;
+    text-align: center;
+    border: 4px black solid;
+    margin: .5rem 2rem 0 2rem;
+    background: #f7c644;
+    cursor: pointer;
+}
+
+.premium-button:hover {
+    opacity: 0.5;
+}
+
+.basic-button:hover {
+    opacity: 0.5;
+}
+
+.pack-buttons {
+    display: inline-flex;
 }

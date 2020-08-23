@@ -27,7 +27,6 @@ class Trainer extends React.Component {
     componentDidMount = async () => {
         if (!this.state.name) {
             const trainerId = localStorage.getItem(localStorageEnum.trainerId);
-            debugger
             const res = await fetch(`http://localhost:3000/trainer/${trainerId}`);
             if (!res.ok) {
                 const error = await res.text();
@@ -47,27 +46,6 @@ class Trainer extends React.Component {
                 });
             }
         }
-    }
-
-    getPokecollection = () => {
-        fetch(`http://localhost:3000/trainer/${this.state.newTrainerId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json',
-            },
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                data.pokecollection.pokemons.forEach((pokemon) => {
-                    this.setState(() => ({
-                        pokemonSpirite: [...this.state.pokemonSpirite, pokemon.sprite],
-                        pokemonName: [...this.state.pokemonName, pokemon.name],
-                        pokemonRarity: [...this.state.pokemonRarity, pokemon.rarity],
-                        pokemonId: [...this.state.pokemonId, pokemon._id],
-                    }));
-                });
-            });
     }
 
     postTrainer = async () => {
@@ -185,33 +163,35 @@ class Trainer extends React.Component {
                 <div className="bg" style={{ backgroundImage: `url(${bg})` }}></div>
                 <div className="trainer-container">
                     <div className="trainer-group">
-                        <div className="trainer-header">Welcome to the Pokemon Game</div>
-                        <div className="trainer-subheader">Enter your name to begin</div>
-                        <div className="trainer-subheader">
-                            <input
-                                className="trainer-input"
-                                value={this.state.name}
-                                onChange={this.handleNameChange}
-                                type="text"
-                            />
-                            <div className="trainer-button" onClick={this.postTrainer}>Submit</div>
-                        </div>
+                        {this.state.name.length > 0 &&
+                            <div>
+                                <div className="trainer-header">Welcome to the Pokemon Game</div>
+                                <div className="trainer-subheader">Enter your name to begin</div>
+                                <div className="trainer-subheader">
+                                    <input
+                                        className="trainer-input"
+                                        value={this.state.name}
+                                        onChange={this.handleNameChange}
+                                        type="text"
+                                    />
+                                    <div className="trainer-button" onClick={this.postTrainer}>Submit</div>
+                                </div>
+                            </div>
+                        }
                         <div className="trainer-results">
                             <div className="error">{this.state.error}</div>
-                            <div>Welcome {this.state.newTrainer}!</div>
+                            <div className="welcome">Welcome {this.state.newTrainer}!</div>
                             <div>Currency: ${this.state.newTrainerCurrency}</div>
-                            <div>Your Trainer ID: {this.state.newTrainerId}</div>
-                            <br></br>
-                            <button onClick={this.buyPremiumPokemonPack}>Buy Premium Pokemon Pack</button>
-                            <button onClick={this.buyBackPokemonPack}>Buy Basic Pokemon Pack</button>
-                            <br></br>
-                            <button onClick={this.getPokecollection}>See your pokemon collection</button>
-                            <br></br>
-                            <input
+                            <div>Trainer ID: {this.state.newTrainerId}</div>
+                            <div className="pack-buttons">
+                                <div className="premium-button" onClick={this.buyPremiumPokemonPack}>Buy Premium Pokemon Pack</div>
+                                <div className="basic-button" onClick={this.buyBackPokemonPack}>Buy Basic Pokemon Pack</div>
+                            </div>
+                            {/* <input
                                 value={this.state.currency}
                                 onChange={this.getCurrency}
-                            />
-                            <button onClick={this.addCurrency}>Add Currency</button>
+                            /> */}
+                            {/* <button onClick={this.addCurrency}>Add Currency</button> */}
                             <div>
                                 <div>Pokemon Collection</div>
                                 {this.state.pokemonSpirite.map((spirte) => <img alt="pokemon" src={spirte} />)}
