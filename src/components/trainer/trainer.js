@@ -5,10 +5,9 @@ import bg from '../../images/bg.jpg';
 const localStorageEnum = {
     trainerId: 'trainerId',
 }
-
 class Trainer extends React.Component {
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
             name: '',
             trainerId: '',
@@ -28,6 +27,7 @@ class Trainer extends React.Component {
     componentDidMount = async () => {
         if (!this.state.name) {
             const trainerId = localStorage.getItem(localStorageEnum.trainerId);
+            debugger
             const res = await fetch(`http://localhost:3000/trainer/${trainerId}`);
             if (!res.ok) {
                 const error = await res.text();
@@ -35,13 +35,16 @@ class Trainer extends React.Component {
             }
             const data = await res.json();
             if (data) {
-                console.log(data)
-                this.setState(() => ({
-                    newTrainer: data.name,
-                    newTrainerId: data._id,
-                    newTrainerCurrency: data.currency,
-                    pokeCollectionId: data.pokecollection,
-                }))
+                console.log(data);
+                data.pokecollection.pokemons.forEach((pokemon) => {
+                    this.setState(() => ({
+                        newTrainer: data.name,
+                        newTrainerId: data._id,
+                        newTrainerCurrency: data.currency,
+                        pokeCollectionId: data.pokecollection,
+                        pokemonSpirite: [...this.state.pokemonSpirite, pokemon.sprite],
+                    }));
+                });
             }
         }
     }
@@ -51,7 +54,7 @@ class Trainer extends React.Component {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                Accept: 'application/json',
             },
         })
             .then((response) => response.json())
@@ -62,121 +65,118 @@ class Trainer extends React.Component {
                         pokemonName: [...this.state.pokemonName, pokemon.name],
                         pokemonRarity: [...this.state.pokemonRarity, pokemon.rarity],
                         pokemonId: [...this.state.pokemonId, pokemon._id],
-                    }))
-                })
+                    }));
+                });
             });
     }
 
     postTrainer = async () => {
         const message = {
-            "name": `${this.state.name}`
-        }
-        await fetch(`http://localhost:3000/trainer`, {
+            name: `${this.state.name}`,
+        };
+        await fetch('http://localhost:3000/trainer', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                Accept: 'application/json',
             },
-            body: JSON.stringify(message)
+            body: JSON.stringify(message),
         })
             .then((res) => {
                 if (!res.ok) throw Error(res.statusText);
                 return res.json();
             })
             .then(async (res) => {
-                console.log(res)
+                console.log(res);
                 this.setState(() => ({
                     newTrainer: res.name,
                     newTrainerId: res._id,
                     newTrainerCurrency: res.currency,
                     pokeCollectionId: res.pokecollection,
 
-                }))
+                }));
                 localStorage.setItem(localStorageEnum.trainerId, res._id);
-                console.log(localStorage)
-            })
+                console.log(localStorage);
+            });
     }
 
     buyBackPokemonPack = async () => {
         const newPack = {
-            "trainerId": `${this.state.newTrainerId}`,
-            "packType": "basic",
-        }
-        await fetch(`http://localhost:3000/pokeCollection/pack`, {
+            trainerId: `${this.state.newTrainerId}`,
+            packType: 'basic',
+        };
+        await fetch('http://localhost:3000/pokeCollection/pack', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                Accept: 'application/json',
             },
-            body: JSON.stringify(newPack)
+            body: JSON.stringify(newPack),
         })
             .then((res) => {
                 if (!res.ok) {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
-                    }))
+                    }));
                     console.log((res.statusText));
                 }
                 return res.json();
             })
             .then(async (res) => {
-                res.map((basicPokemon) => {
-                    return this.setState(() => ({
-                        pokemonSpirite: [...this.state.pokemonSpirite, basicPokemon.sprite]
-                    }))
-                })
-            })
+                res.map((basicPokemon) => this.setState(() => ({
+                    pokemonSpirite: [...this.state.pokemonSpirite, basicPokemon.sprite],
+                })));
+            });
     }
 
     buyPremiumPokemonPack = async () => {
         const newPack = {
-            "trainerId": `${this.state.newTrainerId}`,
-            "packType": "premium",
-        }
-        await fetch(`http://localhost:3000/pokeCollection/pack`, {
+            trainerId: `${this.state.newTrainerId}`,
+            packType: 'premium',
+        };
+        await fetch('http://localhost:3000/pokeCollection/pack', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                Accept: 'application/json',
             },
-            body: JSON.stringify(newPack)
+            body: JSON.stringify(newPack),
         })
             .then((res) => {
                 if (!res.ok) {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
-                    }))
+                    }));
                     console.log((res.statusText));
                 }
                 return res.json();
             })
             .then(async (res) => {
-                res.map((premiumPokemon) => {
-                    return this.setState(() => ({
-                        pokemonSpirite: [...this.state.pokemonSpirite, premiumPokemon.sprite]
-                    }))
-                })
-            })
+                res.map((premiumPokemon) => this.setState(() => ({
+                    pokemonSpirite: [...this.state.pokemonSpirite, premiumPokemon.sprite],
+                })));
+            });
     }
 
-    getCurrency = e => {
+    getCurrency = (e) => {
         const currency = e.target.value;
         this.setState(() => ({
-            currency
-        }))
+            currency,
+        }));
     }
 
-    handleNameChange = e => {
+    handleNameChange = (e) => {
         const name = e.target.value;
         this.setState(() => ({
-            name
-        }))
+            name,
+        }));
     }
-    handleIdChange = e => {
+
+    handleIdChange = (e) => {
         const trainerId = e.target.value;
         this.setState(() => ({
-            trainerId
-        }))
+            trainerId,
+        }));
     }
 
     render() {
@@ -214,15 +214,13 @@ class Trainer extends React.Component {
                             <button onClick={this.addCurrency}>Add Currency</button>
                             <div>
                                 <div>Pokemon Collection</div>
-                                {this.state.pokemonSpirite.map((spirte) => {
-                                    return <img alt="pokemon" src={spirte} />
-                                })}
+                                {this.state.pokemonSpirite.map((spirte) => <img alt="pokemon" src={spirte} />)}
                             </div>
                         </div>
                     </div>
                 </div>
             </>
-        )
+        );
     }
 }
 
