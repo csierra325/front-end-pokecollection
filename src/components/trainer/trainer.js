@@ -21,11 +21,13 @@ class Trainer extends React.Component {
             pokemonRarity: [],
             error: '',
             currency: 0,
+            sortedPokemon: [],
+            data: '',
         }
     }
 
     componentDidMount = async () => {
-        if (!this.state.name) {
+        if (!this.state.trainerId) {
             const trainerId = localStorage.getItem(localStorageEnum.trainerId);
             const res = await fetch(`http://localhost:3000/trainer/${trainerId}`);
             if (!res.ok) {
@@ -34,7 +36,7 @@ class Trainer extends React.Component {
             }
             const data = await res.json();
             if (data) {
-                console.log(data);
+                console.log(data.pokecollection.pokemons);
                 data.pokecollection.pokemons.forEach((pokemon) => {
                     this.setState(() => ({
                         newTrainer: data.name,
@@ -42,6 +44,8 @@ class Trainer extends React.Component {
                         newTrainerCurrency: data.currency,
                         pokeCollectionId: data.pokecollection,
                         pokemonSpirite: [...this.state.pokemonSpirite, pokemon.sprite],
+                        pokemonName: [...this.state.pokemonName, pokemon.name],
+                        data: data.pokecollection.pokemons,
                     }));
                 });
             }
@@ -65,7 +69,7 @@ class Trainer extends React.Component {
                 return res.json();
             })
             .then(async (res) => {
-                console.log(res);
+                // console.log(res);
                 this.setState(() => ({
                     newTrainer: res.name,
                     newTrainerId: res._id,
@@ -74,7 +78,7 @@ class Trainer extends React.Component {
 
                 }));
                 localStorage.setItem(localStorageEnum.trainerId, res._id);
-                console.log(localStorage);
+                // console.log(localStorage);
             });
     }
 
@@ -96,7 +100,7 @@ class Trainer extends React.Component {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
                     }));
-                    console.log((res.statusText));
+                    // console.log((res.statusText));
                 }
                 return res.json();
             })
@@ -125,7 +129,7 @@ class Trainer extends React.Component {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
                     }));
-                    console.log((res.statusText));
+                    // console.log((res.statusText));
                 }
                 return res.json();
             })
@@ -157,13 +161,45 @@ class Trainer extends React.Component {
         }));
     }
 
+    ascendingSort = () => {
+        const compareNameAZ = (a, b) => {
+            return (a['name'].toLowerCase() > b['name'].toLowerCase()) ? 1 : (a['name'].toLowerCase() < b['name'].toLowerCase()) ? -1 : 0;
+        }
+        const sort = this.state.data.sort(compareNameAZ)
+        // console.log(sort)
+    }
+
+    descendingSort = () => {
+        const compareNameAZ = (b, a) => {
+            return (a['name'].toLowerCase() > b['name'].toLowerCase()) ? 1 : (a['name'].toLowerCase() < b['name'].toLowerCase()) ? -1 : 0;
+        }
+        const sort = this.state.data.sort(compareNameAZ)
+        //console.log(sort)
+    }
+
+    idSort = () => {
+        const compareNameAZ = (a, b) => {
+            return (a['_id'] > b['_id']) ? 1 : (a['_id'] < b['_id']) ? -1 : 0;
+        }
+        const sort = this.state.data.sort(compareNameAZ)
+        console.log(sort)
+    }
+
+    raritySort = () => {
+        const compareNameAZ = (a, b) => {
+            return (a['rarity'] > b['rarity']) ? 1 : (a['rarity'] < b['rarity']) ? -1 : 0;
+        }
+        const sort = this.state.data.sort(compareNameAZ)
+        console.log(sort)
+    }
+
     render() {
         return (
             <>
                 <div className="bg" style={{ backgroundImage: `url(${bg})` }}></div>
                 <div className="trainer-container">
                     <div className="trainer-group">
-                        {this.state.name.length > 0 &&
+                        {this.state.trainerId.length < 0 &&
                             <div>
                                 <div className="trainer-header">Welcome to the Pokemon Game</div>
                                 <div className="trainer-subheader">Enter your name to begin</div>
@@ -187,6 +223,27 @@ class Trainer extends React.Component {
                                 <div className="premium-button" onClick={this.buyPremiumPokemonPack}>Buy Premium Pokemon Pack</div>
                                 <div className="basic-button" onClick={this.buyBackPokemonPack}>Buy Basic Pokemon Pack</div>
                             </div>
+                            <select onChange={(e) => {
+                                const value = e.target.value;
+                                if (value === 'az') {
+                                    this.ascendingSort();
+                                }
+                                if (value === 'za') {
+                                    this.descendingSort();
+                                }
+                                if (value === 'id') {
+                                    this.idSort();
+                                }
+                                if (value === 'rarity') {
+                                    this.raritySort()
+                                }
+                            }} name="sort" id="sort">
+                                <option value="">Sort</option>
+                                <option value="az">A-Z</option>
+                                <option value="za">Z-A</option>
+                                <option value="id">ID</option>
+                                <option value="rarity">Rarity</option>
+                            </select>
                             {/* <input
                                 value={this.state.currency}
                                 onChange={this.getCurrency}
@@ -195,6 +252,7 @@ class Trainer extends React.Component {
                             <div>
                                 <div>Pokemon Collection</div>
                                 {this.state.pokemonSpirite.map((spirte) => <img alt="pokemon" src={spirte} />)}
+                                {this.state.sortedPokemon.map((pokemon) => <div>{pokemon.name}</div>)}
                             </div>
                         </div>
                     </div>
