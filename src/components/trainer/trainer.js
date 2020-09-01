@@ -69,7 +69,6 @@ class Trainer extends React.Component {
                 return res.json();
             })
             .then(async (res) => {
-                // console.log(res);
                 this.setState(() => ({
                     newTrainer: res.name,
                     newTrainerId: res._id,
@@ -78,7 +77,6 @@ class Trainer extends React.Component {
 
                 }));
                 localStorage.setItem(localStorageEnum.trainerId, res._id);
-                // console.log(localStorage);
             });
     }
 
@@ -100,7 +98,6 @@ class Trainer extends React.Component {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
                     }));
-                    // console.log((res.statusText));
                 }
                 return res.json();
             })
@@ -129,7 +126,6 @@ class Trainer extends React.Component {
                     this.setState(() => ({
                         error: 'Sorry, you do not have enough money.',
                     }));
-                    // console.log((res.statusText));
                 }
                 return res.json();
             })
@@ -166,15 +162,27 @@ class Trainer extends React.Component {
             return (a['name'].toLowerCase() > b['name'].toLowerCase()) ? 1 : (a['name'].toLowerCase() < b['name'].toLowerCase()) ? -1 : 0;
         }
         const sort = this.state.data.sort(compareNameAZ)
-        // console.log(sort)
+        const sortedSpirte = [];
+        for (var i = 0; i < sort.length; i++) {
+            sortedSpirte.push(sort[i].sprite)
+        }
+        this.setState(() => ({
+            pokemonSpirite: sortedSpirte
+        }))
     }
 
     descendingSort = () => {
         const compareNameAZ = (b, a) => {
             return (a['name'].toLowerCase() > b['name'].toLowerCase()) ? 1 : (a['name'].toLowerCase() < b['name'].toLowerCase()) ? -1 : 0;
         }
+        const sortedSpirte = [];
         const sort = this.state.data.sort(compareNameAZ)
-        //console.log(sort)
+        for (var i = 0; i < sort.length; i++) {
+            sortedSpirte.push(sort[i].sprite)
+        }
+        this.setState(() => ({
+            pokemonSpirite: sortedSpirte
+        }))
     }
 
     idSort = () => {
@@ -182,7 +190,13 @@ class Trainer extends React.Component {
             return (a['_id'] > b['_id']) ? 1 : (a['_id'] < b['_id']) ? -1 : 0;
         }
         const sort = this.state.data.sort(compareNameAZ)
-        console.log(sort)
+        const sortedSpirte = [];
+        for (var i = 0; i < sort.length; i++) {
+            sortedSpirte.push(sort[i].sprite)
+        }
+        this.setState(() => ({
+            pokemonSpirite: sortedSpirte
+        }))
     }
 
     raritySort = () => {
@@ -190,7 +204,13 @@ class Trainer extends React.Component {
             return (a['rarity'] > b['rarity']) ? 1 : (a['rarity'] < b['rarity']) ? -1 : 0;
         }
         const sort = this.state.data.sort(compareNameAZ)
-        console.log(sort)
+        const sortedSpirte = [];
+        for (var i = 0; i < sort.length; i++) {
+            sortedSpirte.push(sort[i].sprite)
+        }
+        this.setState(() => ({
+            pokemonSpirite: sortedSpirte
+        }))
     }
 
     render() {
