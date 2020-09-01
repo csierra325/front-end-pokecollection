@@ -27,7 +27,9 @@ class Trainer extends React.Component {
     }
 
     componentDidMount = async () => {
-        if (!this.state.trainerId) {
+        debugger;
+        if (this.state.trainerId === '') {
+            debugger
             const trainerId = localStorage.getItem(localStorageEnum.trainerId);
             const res = await fetch(`http://localhost:3000/trainer/${trainerId}`);
             if (!res.ok) {
@@ -219,7 +221,7 @@ class Trainer extends React.Component {
                 <div className="bg" style={{ backgroundImage: `url(${bg})` }}></div>
                 <div className="trainer-container">
                     <div className="trainer-group">
-                        {this.state.trainerId.length < 0 &&
+                        {!this.state.newTrainer &&
                             <div>
                                 <div className="trainer-header">Welcome to the Pokemon Game</div>
                                 <div className="trainer-subheader">Enter your name to begin</div>
@@ -234,47 +236,49 @@ class Trainer extends React.Component {
                                 </div>
                             </div>
                         }
-                        <div className="trainer-results">
-                            <div className="error">{this.state.error}</div>
-                            <div className="welcome">Welcome {this.state.newTrainer}!</div>
-                            <div>Currency: ${this.state.newTrainerCurrency}</div>
-                            <div>Trainer ID: {this.state.newTrainerId}</div>
-                            <div className="pack-buttons">
-                                <div className="premium-button" onClick={this.buyPremiumPokemonPack}>Buy Premium Pokemon Pack</div>
-                                <div className="basic-button" onClick={this.buyBackPokemonPack}>Buy Basic Pokemon Pack</div>
-                            </div>
-                            <select onChange={(e) => {
-                                const value = e.target.value;
-                                if (value === 'az') {
-                                    this.ascendingSort();
-                                }
-                                if (value === 'za') {
-                                    this.descendingSort();
-                                }
-                                if (value === 'id') {
-                                    this.idSort();
-                                }
-                                if (value === 'rarity') {
-                                    this.raritySort()
-                                }
-                            }} name="sort" id="sort">
-                                <option value="">Sort</option>
-                                <option value="az">A-Z</option>
-                                <option value="za">Z-A</option>
-                                <option value="id">ID</option>
-                                <option value="rarity">Rarity</option>
-                            </select>
-                            {/* <input
+                        {this.state.newTrainer &&
+                            <div className="trainer-results">
+                                <div className="error">{this.state.error}</div>
+                                <div className="welcome">Welcome {this.state.newTrainer}!</div>
+                                <div>Currency: ${this.state.newTrainerCurrency}</div>
+                                <div>Trainer ID: {this.state.newTrainerId}</div>
+                                <div className="pack-buttons">
+                                    <div className="premium-button" onClick={this.buyPremiumPokemonPack}>Buy Premium Pokemon Pack</div>
+                                    <div className="basic-button" onClick={this.buyBackPokemonPack}>Buy Basic Pokemon Pack</div>
+                                </div>
+                                <select onChange={(e) => {
+                                    const value = e.target.value;
+                                    if (value === 'az') {
+                                        this.ascendingSort();
+                                    }
+                                    if (value === 'za') {
+                                        this.descendingSort();
+                                    }
+                                    if (value === 'id') {
+                                        this.idSort();
+                                    }
+                                    if (value === 'rarity') {
+                                        this.raritySort()
+                                    }
+                                }} name="sort" id="sort">
+                                    <option value="">Sort</option>
+                                    <option value="az">A-Z</option>
+                                    <option value="za">Z-A</option>
+                                    <option value="id">ID</option>
+                                    <option value="rarity">Rarity</option>
+                                </select>
+                                {/* <input
                                 value={this.state.currency}
                                 onChange={this.getCurrency}
                             /> */}
-                            {/* <button onClick={this.addCurrency}>Add Currency</button> */}
-                            <div>
-                                <div>Pokemon Collection</div>
-                                {this.state.pokemonSpirite.map((spirte) => <img alt="pokemon" src={spirte} />)}
-                                {this.state.sortedPokemon.map((pokemon) => <div>{pokemon.name}</div>)}
+                                {/* <button onClick={this.addCurrency}>Add Currency</button> */}
+                                <div>
+                                    <div>Pokemon Collection</div>
+                                    {this.state.pokemonSpirite.map((spirte) => <img alt="pokemon" src={spirte} />)}
+                                    {this.state.sortedPokemon.map((pokemon) => <div>{pokemon.name}</div>)}
+                                </div>
                             </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </>
