@@ -79,33 +79,29 @@ class Trainer extends React.Component {
       });
   }
 
-  // redo this
   buyPremiumPokemonPack = async () => {
-      const newPack = {
-          trainerId: `${this.state.newTrainerId}`,
-          packType: 'premium',
-      };
-      await fetch('http://localhost:3000/pokeCollection/pack', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-          },
-          body: JSON.stringify(newPack),
-      })
-          .then((res) => {
-              if (!res.ok) {
-                  this.setState(() => ({
-                      error: 'Sorry, you do not have enough money.',
-                  }));
-              }
-              return res.json();
-          })
-          .then(async (res) => {
-              res.map((premiumPokemon) => this.setState(() => ({
-                  pokemonSpirite: [...this.state.pokemonSpirite, premiumPokemon.sprite],
-              })));
-          });
+    const newPack = {
+        trainerId: `${this.state.newTrainerId}`,
+        packType: 'premium',
+    };
+    let res = await fetch('http://localhost:3000/pokeCollection/pack', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify(newPack),
+    })
+    if (!res.ok) {
+      return this.setState({ error: 'Sorry, you do not have enough money.' });
+    }
+    const data = await res.json();
+    this.setState({
+      pokeCollection: {
+        ...this.state.pokeCollection,
+        pokemons: [...data, ...this.state.pokeCollection.pokemons,]
+      }
+    });
   }
 
   getCurrency = (e) => {
@@ -233,7 +229,8 @@ class Trainer extends React.Component {
                 <div>
                   <div>Pokemon Collection</div>
                   {/* add names and numbers etc */}
-                  {this.state.pokeCollection.pokemons.map(pokemon => <img alt="pokemon" src={pokemon.sprite} />)}
+
+                  {this.state.pokeCollection.pokemons && this.state.pokeCollection.pokemons.map(pokemon => <img alt="pokemon" src={pokemon.sprite} />)}
                 </div>
               </div>
             }
