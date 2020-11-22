@@ -54,6 +54,15 @@ class Trainer extends React.Component {
     localStorage.setItem(localStorageEnum.trainerId, data._id);
   }
 
+  setStateFxn = (data) => {
+    return this.setState({
+      pokeCollection: {
+        ...this.state.pokeCollection,
+        pokemons: [...this.state.pokeCollection.pokemons, ...data]
+      }
+    });
+  }
+
   buyBackPokemonPack = async () => {
       const newPack = {
           trainerId: `${this.state.newTrainerId}`,
@@ -71,13 +80,17 @@ class Trainer extends React.Component {
           return this.setState({ error: 'Sorry, you do not have enough money.' });
       }
       const data = await res.json();
-      this.setState({
+      if (this.state.pokeCollection.pokemons){
+        this.setStateFxn(data)
+      } else {
+        this.setState({
           pokeCollection: {
-              ...this.state.pokeCollection,
-              pokemons: [...this.state.pokeCollection.pokemons, ...data]
+            ...this.state.pokeCollection,
+            pokemons: [...data]
           }
-      });
-  }
+        });
+      }
+    }
 
   buyPremiumPokemonPack = async () => {
     const newPack = {
@@ -96,12 +109,16 @@ class Trainer extends React.Component {
       return this.setState({ error: 'Sorry, you do not have enough money.' });
     }
     const data = await res.json();
-    this.setState({
-      pokeCollection: {
-        ...this.state.pokeCollection,
-        pokemons: [...data, ...this.state.pokeCollection.pokemons,]
-      }
-    });
+    if (this.state.pokeCollection.pokemons){
+      this.setStateFxn(data)
+    } else {
+      this.setState({
+        pokeCollection: {
+          ...this.state.pokeCollection,
+          pokemons: [...data]
+        }
+      });
+    }
   }
 
   getCurrency = (e) => {
